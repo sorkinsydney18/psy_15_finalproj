@@ -1,6 +1,12 @@
 library(rtweet)
 library(tidytext)
 library(tidyverse)
+library(ggmap)
+register_google(key = GOOGLE_MAPS_KEY)
+
+GOOGLE_MAPS_KEY <- "AIzaSyDabUPNzUcgC808hOwM3_QYVYW5UTijsnI"
+register_google(key = GOOGLE_MAPS_KEY)
+getOption("ggmap")
 
 data("stop_words")
 
@@ -40,3 +46,18 @@ cleaned_tweets %>%
   labs(x = "Count",
        y = "Location",
        title = "Where Twitter users are from - unique locations ")
+
+
+
+stuff <- cleaned_tweets %>% 
+  select(text, quoted_location,location)
+  
+china1 <- search_tweets(
+  geocode = lookup_coords("Hong Kong", apikey = GOOGLE_MAPS_KEY), n = 10)
+
+
+
+japan <- search_tweets("coronavirus", n = 10, lang = "ja")
+china <- search_tweets("coronavirus", n = 10, lang = "zh-cn", country = "china")
+
+lookup_coords("london")
