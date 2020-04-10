@@ -5,7 +5,6 @@ library(ggmap)
 library(syuzhet)
 
 
-GOOGLE_MAPS_KEY <- "AIzaSyDabUPNzUcgC808hOwM3_QYVYW5UTijsnI"
 register_google(key = GOOGLE_MAPS_KEY)
 getOption("ggmap")
 
