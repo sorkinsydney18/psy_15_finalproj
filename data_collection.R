@@ -3,7 +3,6 @@ library(tidytext)
 library(tidyverse)
 library(ggmap)
 library(syuzhet)
-library(sentimentr)
 
 
 register_google(key = google_maps_key)
@@ -94,4 +93,30 @@ china_clean1 <- china_clean %>%
 
 avg_polarity_china <- mean(china_clean1$sentiment)
 
+#################Japan
+
+japan <- search_tweets("coronavirus OR COVID", 
+                       include_rts = FALSE, 
+                       geocode = lookup_coords("Japan", apikey = google_maps_key), 
+                       lang = "en",
+                       n = 1000)
+#clean tweets
+
+japan$stripped_text <- gsub("http.*","",  japan$text)
+japan$stripped_text <- gsub("https.*","", japan$stripped_text)
+
+
+japan_clean <- japan %>% 
+  unnest_tokens(word, stripped_text) %>% 
+  anti_join(stop_words) %>% 
+  select(status_id, lang, text, location, word)
+
+#sentiment analysis 
+
+japan_clean1 <- japan_clean %>% 
+  mutate(sentiment = get_sentiment(word), method = "syuzhet") %>% 
+  group_by(status_id) %>% 
+  mutate(twt_polarity = sum(sentiment)) 
+
+avg_polarity_japan <- mean(japan_clean1$sentiment)
 
